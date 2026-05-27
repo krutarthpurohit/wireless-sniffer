@@ -8,7 +8,7 @@
 int main(void)
 {
 	ACCESS_POINT_t aps[MAX_APS];
-	RSSI_INFO_t* rssi_info;
+	RSSI_INFO_t rssi_info;
 	
 	printf("\nWireless-info Program\n");
 
@@ -28,8 +28,8 @@ int main(void)
 
 	printf("\nTotal Network Found: %d\n", total);
 
-	rssi_monitor(rssi_info);
-	printf("RSSI: Signal level=%f",rssi_info->signal_level);
+	rssi_monitor(&rssi_info);
+	printf("RSSI: Signal level=%f\n",rssi_info.signal_level);
 	
 	return 0;
 }

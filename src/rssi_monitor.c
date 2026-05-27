@@ -23,10 +23,10 @@ void rssi_monitor(RSSI_INFO_t* rssi_info)
         char* signal_lvl = strstr(line,"Signal level=");
         if(signal_lvl != NULL)
         {
-            if(sscanf(signal_lvl,"Signal level=%f", &curr_signal_lvl) > 0)
+            if(sscanf(signal_lvl,"Signal level=%f", &rssi_info->signal_level) > 0)
             {
-                printf("Fetched signal level= %0.2f\n",curr_signal_lvl);
-                rssi_info->signal_level = curr_signal_lvl;
+                printf("Fetched signal level= %0.2f\n",rssi_info->signal_level);
+                break;
             }
         }
 
