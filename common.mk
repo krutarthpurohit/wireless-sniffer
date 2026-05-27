@@ -5,7 +5,8 @@ CC:= gcc
 
 SRC ?= 	src/main.c \
 		src/scanner.c \
-		src/rssi_monitor.c
+		src/rssi_monitor.c \
+		src/file_mng.c
 
 CFLAG:= -Wall -Wextra
 
