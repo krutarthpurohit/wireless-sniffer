@@ -1,7 +1,7 @@
 include common.mk
 
 all:
-	$(CC) $(CFLAGS) $(SRC) -o $(OUT)
+	$(CC) $(CFLAGS) $(SRC) -o $(OUT) $(LDFLAGS)
 
 clean:
 	rm -rf $(OUT)

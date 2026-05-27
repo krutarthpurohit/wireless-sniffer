@@ -5,10 +5,13 @@
 #include "scanner.h"
 #include "rssi_monitor.h"
 
+pthread_t thread_rssi;
+pthread_attr_t thread_rssi_attr;
+
 int main(void)
 {
 	ACCESS_POINT_t aps[MAX_APS];
-	RSSI_INFO_t rssi_info;
+	RSSI_INFO_t rssi_info = {0};
 	
 	printf("\nWireless-info Program\n");
 
@@ -28,8 +31,13 @@ int main(void)
 
 	printf("\nTotal Network Found: %d\n", total);
 
-	rssi_monitor(&rssi_info);
-	printf("RSSI: Signal level=%f\n",rssi_info.signal_level);
+	int ret = pthread_create(&thread_rssi, NULL , &rssi_monitor, &rssi_info);
+	if(ret != 0) {
+		printf("\nError: Creating rssi thread\n");
+		return -1;
+	}
+
+	pthread_join(thread_rssi, NULL);
 	
 	return 0;
 }

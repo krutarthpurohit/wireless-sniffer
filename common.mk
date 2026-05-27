@@ -9,4 +9,6 @@ SRC ?= 	src/main.c \
 
 CFLAG:= -Wall -Wextra
 
+LDFLAGS = -lpthread
+
 OUT:= wifi-sniffer
