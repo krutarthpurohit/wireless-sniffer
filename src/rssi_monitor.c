@@ -5,12 +5,42 @@
 #include "main.h"
 #include "rssi_monitor.h"
 
+pthread_mutex_t sig_lvl_mutx = PTHREAD_MUTEX_INITIALIZER;
+RSSI_INFO_t rssi_info = {0};
+
+void set_rssi_sigl(float sigVal)
+{
+    float tempStorage = sigVal;
+ 
+    pthread_mutex_lock(&sig_lvl_mutx);
+
+    rssi_info.signal_level = tempStorage;
+    // printf("\n[set_rssi_sigl] rssi_info.signal_level = %0.2f\n",rssi_info.signal_level);
+    
+    pthread_mutex_unlock(&sig_lvl_mutx);
+
+    return;
+}
+
+float get_rssi_sigl(void)
+{
+    float retRssiSigVal = 0.00;
+ 
+    pthread_mutex_lock(&sig_lvl_mutx);
+
+    retRssiSigVal = rssi_info.signal_level;
+    // printf("\n[get_rssi_sigl] retRssiSigVal=%0.2f", retRssiSigVal);
+    
+    pthread_mutex_unlock(&sig_lvl_mutx);
+    
+    return retRssiSigVal;
+}
+
 void *rssi_monitor(void *arg)
 {
     FILE* fp                = NULL;
     char line[2048]         = "\0";
     float curr_signal_lvl   = 0;
-    RSSI_INFO_t *info = (RSSI_INFO_t*) arg;
     
     while (1)
     {
@@ -27,9 +57,10 @@ void *rssi_monitor(void *arg)
             char* signal_lvl = strstr(line,"Signal level=");
             if(signal_lvl != NULL)
             {
-                if(sscanf(signal_lvl,"Signal level=%f", &info->signal_level) == 1)
+                if(sscanf(signal_lvl,"Signal level=%f", &curr_signal_lvl) == 1)
                 {
-                    printf("Fetched signal level= %0.2f\n",info->signal_level);
+                    printf("Fetched signal level= %0.2f\n",curr_signal_lvl);
+                    set_rssi_sigl(curr_signal_lvl);
                 }
             }
 
