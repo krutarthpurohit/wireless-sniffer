@@ -1,7 +1,5 @@
 #include "queue.h"
 
-#define SIG_SAMPELS_SIZE 15
-
 float rssi_sig_queue[SIG_SAMPELS_SIZE] = {0};
 pthread_mutex_t queue_mutx = PTHREAD_MUTEX_INITIALIZER;
 
@@ -27,8 +25,9 @@ void enqueue(float value)
 
 void view_queue(void)
 {
+    float rssi_log_buffer[SIG_SAMPELS_SIZE] = {0};
+    
     pthread_mutex_lock(&queue_mutx);
-    float rssi_log_buffer[SIG_SAMPELS_SIZE];
     
     for(int i=0; i < SIG_SAMPELS_SIZE ; i++)
     {
