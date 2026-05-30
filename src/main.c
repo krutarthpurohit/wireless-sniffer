@@ -7,16 +7,16 @@
 #include "scanner.h"
 #include "rssi_monitor.h"
 #include "file_mng.h"
+#include "ai_model.h"
+#include "queue.h"
 
 pthread_t thread_rssi;
 pthread_t thread_file_mng;
-
-pthread_attr_t thread_rssi_attr;
+pthread_t thread_ai_model;
 
 int main(void)
 {
 	ACCESS_POINT_t aps[MAX_APS];
-	RSSI_INFO_t rssi_info = {0};
 	int ret = -1;
 	
 	printf("\nWireless-sniffer Program\n");
@@ -37,21 +37,27 @@ int main(void)
 
 	printf("\nTotal Network Found: %d\n", total);
 
-	ret = pthread_create(&thread_rssi, NULL , &rssi_monitor, &rssi_info);
+	ret = pthread_create(&thread_rssi, NULL , &rssi_monitor, NULL);
 	if(ret != 0) {
 		printf("\nError: Creating rssi thread\n");
 		return -1;
 	}
 
-	ret = pthread_create(&thread_file_mng, NULL , &create_csv, &rssi_info);
+	ret = pthread_create(&thread_file_mng, NULL , &create_csv, NULL);
+	if(ret != 0) {
+		printf("\nError: Creating csv thread\n");
+		return -1;
+	}
+	
+	ret = pthread_create(&thread_ai_model, NULL , &ai_model, NULL);
 	if(ret != 0) {
 		printf("\nError: Creating csv thread\n");
 		return -1;
 	}
 
-
 	pthread_join(thread_rssi, NULL);
 	pthread_join(thread_file_mng, NULL);
+	pthread_join(thread_ai_model, NULL);
 	
 	return 0;
 }

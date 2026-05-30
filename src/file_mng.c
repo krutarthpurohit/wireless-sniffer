@@ -1,6 +1,7 @@
 #include "main.h"
 #include "file_mng.h"
 #include "rssi_monitor.h"
+#include "queue.h"
 
 void* create_csv(void *arg)
 {
@@ -35,7 +36,7 @@ void* create_csv(void *arg)
         receivedRssiVal = get_rssi_sigl();
         fprintf(fp, "%s,%.2f\n", timestamp, receivedRssiVal);
         fflush(fp);
-
+        // view_queue();
         usleep(DELAY_5MS);
     }
 

@@ -4,6 +4,7 @@
 
 #include "main.h"
 #include "rssi_monitor.h"
+#include "queue.h"
 
 pthread_mutex_t sig_lvl_mutx = PTHREAD_MUTEX_INITIALIZER;
 RSSI_INFO_t rssi_info = {0};
@@ -61,6 +62,7 @@ void *rssi_monitor(void *arg)
                 {
                     printf("Fetched signal level= %0.2f\n",curr_signal_lvl);
                     set_rssi_sigl(curr_signal_lvl);
+                    enqueue(curr_signal_lvl);
                 }
             }
 
