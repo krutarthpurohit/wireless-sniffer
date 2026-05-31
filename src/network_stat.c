@@ -10,6 +10,22 @@
 NETWORK_STAT_t network_stat = {0};
 
 pthread_mutex_t network_stat_mutx = PTHREAD_MUTEX_INITIALIZER;
+extern pthread_mutex_t local_nwtk_stat;
+
+void get_network_stat_info(NETWORK_STAT_t* local_neteork_stat_info)
+{
+    float local_tx_mbps = network_stat.tx_mbps;
+    float local_rx_mbps = network_stat.rx_mbps;
+
+    pthread_mutex_lock(&local_nwtk_stat);
+
+    local_neteork_stat_info->tx_mbps = local_tx_mbps;
+    local_neteork_stat_info->rx_mbps = local_rx_mbps;
+
+    pthread_mutex_unlock(&local_nwtk_stat);
+
+    return;
+}
 
 uint64_t read_counter(const char* stat_path)
 {
@@ -56,6 +72,13 @@ void* fetch_network_stat(void* arg)
 
         printf("TX = %0.2f Mbps\n",tx_mbps);
         printf("RX = %0.2f Mbps\n",rx_mbps);
+
+        pthread_mutex_lock(&network_stat_mutx);
+
+        network_stat.tx_mbps = tx_mbps;
+        network_stat.rx_mbps = rx_mbps;
+
+        pthread_mutex_unlock(&network_stat_mutx);
 
         prev_tx = curr_tx;
         prev_rx = curr_rx;

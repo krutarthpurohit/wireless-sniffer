@@ -4,10 +4,7 @@
 #include "queue.h"
 #include "network_stat.h"
 
-// void get_network_stat_info(NETWORK_STAT_t* local_neteork_stat_info)
-// {
-
-// }
+pthread_mutex_t local_nwtk_stat = PTHREAD_MUTEX_INITIALIZER;
 
 void* create_csv(void *arg)
 {
@@ -32,7 +29,7 @@ void* create_csv(void *arg)
     fseek(fp,0,SEEK_END);
     if(ftell(fp) == 0)
     {
-        fprintf(fp, "Timestamp,rssi\n");
+        fprintf(fp, "Timestamp,rssi,tx_mbps,rx_mbps\n");
     }
     
     while (1)
@@ -40,8 +37,11 @@ void* create_csv(void *arg)
         time(&raw_time);
         time_info = localtime(&raw_time);
         strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", time_info);
+        
         receivedRssiVal = get_rssi_sigl();
-        fprintf(fp, "%s,%.2f\n", timestamp, receivedRssiVal);
+        get_network_stat_info(&local_neteork_stat_info);
+
+        fprintf(fp, "%s,%.2f,%0.4f,%0.4f\n", timestamp, receivedRssiVal, local_neteork_stat_info.tx_mbps, local_neteork_stat_info.rx_mbps);
         fflush(fp);
         // view_queue();
         usleep(DELAY_500MS);
