@@ -8,7 +8,8 @@ SRC ?= 	src/main.c \
 		src/rssi_monitor.c \
 		src/file_mng.c \
 		src/ai_model.c \
-		src/queue.c
+		src/queue.c \
+		src/network_stat.c
 
 CFLAG:= -Wall -Wextra
 

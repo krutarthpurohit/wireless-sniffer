@@ -60,7 +60,7 @@ void *rssi_monitor(void *arg)
             {
                 if(sscanf(signal_lvl,"Signal level=%f", &curr_signal_lvl) == 1)
                 {
-                    printf("Fetched signal level= %0.2f\n",curr_signal_lvl);
+                    // printf("Fetched signal level= %0.2f\n",curr_signal_lvl);
                     set_rssi_sigl(curr_signal_lvl);
                     enqueue(curr_signal_lvl);
                 }
@@ -68,7 +68,7 @@ void *rssi_monitor(void *arg)
 
         }
         pclose(fp);
-        usleep(DELAY_5MS);    //500ms delay
+        usleep(DELAY_500MS);
     }
 
     return NULL;

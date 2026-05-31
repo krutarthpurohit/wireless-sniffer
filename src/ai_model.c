@@ -110,15 +110,15 @@ void* ai_model(void* arg)
 
         if (fabsf(curr_rssi_sig_val - mean) > (3.0f * std_deviation))
         {
-            printf("\nSTATUS: Anomaly\n");
-            printf("Possible interference or instability\n");
+            printf("\n\t\t\tSTATUS: Anomaly\n");
+            printf("\t\t\tPossible interference or instability\n");
         }
         else
         {
-            printf("STATUS: Normal\n");
+            printf("\t\t\tSTATUS: Normal\n");
         }
 
-        usleep(DELAY_5MS);
+        usleep(DELAY_500MS);
     }
 
     return NULL;

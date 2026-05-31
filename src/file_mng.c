@@ -2,6 +2,12 @@
 #include "file_mng.h"
 #include "rssi_monitor.h"
 #include "queue.h"
+#include "network_stat.h"
+
+// void get_network_stat_info(NETWORK_STAT_t* local_neteork_stat_info)
+// {
+
+// }
 
 void* create_csv(void *arg)
 {
@@ -10,6 +16,7 @@ void* create_csv(void *arg)
     char timestamp[20] = "\0";
     struct tm *time_info = {0};
     float receivedRssiVal = 0.00;
+    NETWORK_STAT_t local_neteork_stat_info = {0};
     
     if(access("rssi_logger.csv", F_OK) == 0)
     {
@@ -37,7 +44,7 @@ void* create_csv(void *arg)
         fprintf(fp, "%s,%.2f\n", timestamp, receivedRssiVal);
         fflush(fp);
         // view_queue();
-        usleep(DELAY_5MS);
+        usleep(DELAY_500MS);
     }
 
     fclose(fp);
