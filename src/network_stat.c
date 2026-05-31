@@ -14,13 +14,10 @@ extern pthread_mutex_t local_nwtk_stat;
 
 void get_network_stat_info(NETWORK_STAT_t* local_neteork_stat_info)
 {
-    float local_tx_mbps = network_stat.tx_mbps;
-    float local_rx_mbps = network_stat.rx_mbps;
-
     pthread_mutex_lock(&local_nwtk_stat);
 
-    local_neteork_stat_info->tx_mbps = local_tx_mbps;
-    local_neteork_stat_info->rx_mbps = local_rx_mbps;
+    local_neteork_stat_info->tx_mbps = network_stat.tx_mbps;
+    local_neteork_stat_info->rx_mbps = network_stat.rx_mbps;
 
     pthread_mutex_unlock(&local_nwtk_stat);
 

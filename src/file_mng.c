@@ -1,3 +1,5 @@
+#include <time.h>
+
 #include "main.h"
 #include "file_mng.h"
 #include "rssi_monitor.h"
@@ -10,7 +12,8 @@ void* create_csv(void *arg)
 {
     FILE *fp=NULL;
     time_t raw_time;
-    char timestamp[20] = "\0";
+    char timestamp[64] = "\0";
+    struct timespec ts;
     struct tm *time_info = {0};
     float receivedRssiVal = 0.00;
     NETWORK_STAT_t local_neteork_stat_info = {0};
@@ -34,10 +37,10 @@ void* create_csv(void *arg)
     
     while (1)
     {
-        time(&raw_time);
-        time_info = localtime(&raw_time);
+        clock_gettime(CLOCK_REALTIME, &ts);
+        time_info = localtime(&ts.tv_sec);
         strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", time_info);
-        
+        snprintf(timestamp + strlen(timestamp),sizeof(timestamp)-strlen(timestamp),".%03ld",ts.tv_nsec / 1000000);
         receivedRssiVal = get_rssi_sigl();
         get_network_stat_info(&local_neteork_stat_info);
 
